@@ -1,0 +1,715 @@
+/**
+ * C.A.L.E.N.D.A.R.
+ * Calendar Assistant for Legal Events, Notices, Deadlines, and Automated Reminders
+ *
+ * Stylesheet
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;600&display=swap');
+
+/* ============================================
+   CSS Variables (Theme Support)
+   ============================================ */
+:root {
+    --background-color: #fff;
+    --text-color: #333;
+    --button-bg: #3498db;
+    --button-text: #fff;
+    --input-bg: #f9f9f9;
+    --border-color: #ddd;
+    --header-bg: #f0f0f0;
+}
+
+body.dark-mode {
+    --background-color: #333;
+    --text-color: #fff;
+    --button-bg: #2980b9;
+    --input-bg: #444;
+    --border-color: #555;
+    --header-bg: #222;
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    position: relative;
+}
+
+/* ============================================
+   Header
+   ============================================ */
+.header-container {
+    text-align: center;
+    margin-bottom: 40px;
+    background-color: var(--header-bg);
+    padding: 20px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.creator-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 60px;
+    margin: 0 auto 5px;
+    display: block;
+    background-color: #f0f0f0;
+    border: 3px solid #3498db;
+    overflow: hidden;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+}
+
+.creator-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.creator-image.empty::before {
+    content: "Add Creator Image";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    width: 100%;
+}
+
+.app-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 42px;
+    letter-spacing: 2px;
+    color: var(--text-color);
+    margin-bottom: 5px;
+    margin-top: 0;
+}
+
+.app-subtitle {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 30px;
+    font-weight: normal;
+}
+
+body.dark-mode .app-subtitle {
+    color: #aaa;
+}
+
+.dark-mode-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+/* ============================================
+   Form Container
+   ============================================ */
+.form-container {
+    background-color: var(--input-bg);
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    width: 100%;
+}
+
+.form-group:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+/* ============================================
+   Form Inputs
+   ============================================ */
+.form-input,
+input[type="text"],
+input[type="datetime-local"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+/* ============================================
+   Custom Select/Dropdown
+   ============================================ */
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.custom-select-wrapper input {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.dropdown-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+    font-size: 18px;
+}
+
+.dropdown-list {
+    display: none;
+    position: absolute;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.dropdown-list.show {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f7ff;
+}
+
+body.dark-mode .dropdown-item:hover {
+    background-color: #555;
+}
+
+.dropdown-empty {
+    padding: 10px 15px;
+    color: #999;
+    font-style: italic;
+}
+
+/* ============================================
+   Checkboxes
+   ============================================ */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.recipients-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .recipients-group {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .recipients-group {
+        grid-template-columns: 1fr;
+    }
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    background-color: var(--background-color);
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.checkbox-item:hover {
+    background-color: #f0f7ff;
+    border-color: #add8e6;
+}
+
+body.dark-mode .checkbox-item:hover {
+    background-color: #555;
+    border-color: #777;
+}
+
+.checkbox-item input {
+    margin-right: 8px;
+}
+
+.checkbox-item label {
+    margin: 0;
+}
+
+.select-all-container {
+    margin-bottom: 15px;
+}
+
+.detail-checkbox-group {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+.action-button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.action-button:hover {
+    background-color: #2980b9;
+}
+
+.edit-button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.edit-button:hover {
+    background-color: #2980b9;
+}
+
+.add-attorney-button,
+.save-attorneys-button,
+.cancel-button,
+.edit-attorneys-button {
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.edit-attorneys-button {
+    background-color: #6c757d;
+    margin-bottom: 15px;
+}
+
+.edit-attorneys-button:hover {
+    background-color: #5a6268;
+}
+
+.save-attorneys-button {
+    background-color: #28a745;
+}
+
+.save-attorneys-button:hover {
+    background-color: #218838;
+}
+
+.cancel-button {
+    background-color: #dc3545;
+}
+
+.cancel-button:hover {
+    background-color: #c82333;
+}
+
+.add-attorney-button {
+    background-color: #17a2b8;
+}
+
+.add-attorney-button:hover {
+    background-color: #138496;
+}
+
+/* ============================================
+   Priority Selector
+   ============================================ */
+.priority-selector {
+    display: flex;
+    margin-top: 10px;
+}
+
+.priority-option {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s;
+}
+
+.priority-option:first-child {
+    border-radius: 4px 0 0 4px;
+}
+
+.priority-option:last-child {
+    border-radius: 0 4px 4px 0;
+}
+
+.priority-option.selected {
+    color: white;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.priority-low {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.priority-low.selected {
+    background-color: #28a745;
+}
+
+.priority-medium {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.priority-medium.selected {
+    background-color: #ffc107;
+}
+
+.priority-high {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.priority-high.selected {
+    background-color: #dc3545;
+}
+
+/* ============================================
+   Status Messages
+   ============================================ */
+.status {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 4px;
+    display: none;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* ============================================
+   Download Section
+   ============================================ */
+@keyframes highlight-new-files {
+    0% { background-color: #e8f8e8; }
+    50% { background-color: #b8e6b8; }
+    100% { background-color: #e8f8e8; }
+}
+
+.download-box {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #e8f8e8;
+    border-radius: 8px;
+    border: 1px solid #c3e6cb;
+}
+
+.download-link {
+    display: block;
+    margin: 10px 0;
+    padding: 12px 15px;
+    background-color: #e9f7fe;
+    border: 1px solid #c5e3f6;
+    border-radius: 4px;
+    color: #0078d4;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.download-link:hover {
+    background-color: #d0e8fa;
+    border-color: #92c4e9;
+}
+
+.download-all-button {
+    background-color: #28a745;
+    margin-top: 15px;
+}
+
+.download-all-button:hover {
+    background-color: #218838;
+}
+
+.file-icon {
+    margin-right: 8px;
+}
+
+#download-container {
+    display: none;
+}
+
+/* ============================================
+   Management Panels
+   ============================================ */
+.attorneys-management {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: var(--input-bg);
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+}
+
+.attorney-input-row {
+    display: flex;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.attorney-input-row input {
+    flex: 1;
+}
+
+.attorney-input-row button {
+    width: auto;
+    padding: 10px;
+}
+
+.management-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.management-buttons button {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+.management-panel {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: var(--input-bg);
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    display: none;
+}
+
+.item-list {
+    max-height: 450px;
+    overflow-y: auto;
+    margin: 15px 0;
+}
+
+.item-row {
+    display: flex;
+    margin-bottom: 10px;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--background-color);
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.item-row.preset {
+    background-color: #e9f7fe;
+    border-color: #c5e3f6;
+}
+
+.item-row input {
+    flex: 1;
+}
+
+.item-row button {
+    width: auto;
+    padding: 8px 12px;
+}
+
+/* ============================================
+   Preset Badges and Tags
+   ============================================ */
+.preset-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    background-color: #17a2b8;
+    color: white;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.preset-reminder-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.preset-reminder-tag {
+    background-color: #e0f7fa;
+    color: #0097a7;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+/* ============================================
+   Detail Panels
+   ============================================ */
+.case-detail-panel,
+.description-detail-panel {
+    background-color: #f0f7ff;
+    border: 1px solid #c5e3f6;
+    border-radius: 4px;
+    padding: 15px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.case-detail-header,
+.description-detail-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #c5e3f6;
+}
+
+/* ============================================
+   Import/Export
+   ============================================ */
+.import-export-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.import-export-container button {
+    flex: 1;
+}
+
+#import-settings {
+    display: none;
+}
+
+.settings-file-label {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    padding: 12px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    flex: 1;
+    transition: background-color 0.3s;
+}
+
+.settings-file-label:hover {
+    background-color: #2980b9;
+}
+
+/* ============================================
+   Instructions Section
+   ============================================ */
+.instructions {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #e8f4f8;
+    border-radius: 8px;
+}
+
+body.dark-mode .instructions {
+    background-color: #2a3f47;
+}
+
+h3 {
+    margin-top: 0;
+    color: var(--text-color);
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+.footer {
+    margin-top: 30px;
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    border-top: 1px solid var(--border-color);
+}
+
+body.dark-mode .footer {
+    color: #aaa;
+}
+
+.footer a {
+    color: var(--button-bg);
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}

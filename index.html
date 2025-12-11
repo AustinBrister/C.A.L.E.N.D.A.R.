@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C.A.L.E.N.D.A.R. - Legal Deadline Calendar Generator</title>
+    <meta name="description" content="Calendar Assistant for Legal Events, Notices, Deadlines, and Automated Reminders">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="header-container">
+        <div class="creator-image empty" id="creator-image"></div>
+        <h1 class="app-title">C.A.L.E.N.D.A.R.</h1>
+        <div class="app-subtitle">Calendar Assistant for Legal Events, Notices, Deadlines, and Automated Reminders</div>
+        <div id="dark-mode-toggle" class="dark-mode-toggle">
+            <span id="dark-mode-icon">🌞</span>
+        </div>
+    </div>
+
+    <!-- Import/Export options -->
+    <div class="import-export-container">
+        <button type="button" id="export-settings-button" class="action-button">Export Settings</button>
+        <label for="import-settings" class="settings-file-label">Import Settings</label>
+        <input type="file" id="import-settings" accept=".json">
+        <button type="button" id="toggle-organizer-info" class="action-button">Organizer Settings ▼</button>
+    </div>
+
+    <!-- Organizer Panel -->
+    <div id="organizer-panel" class="form-container" style="margin-bottom: 20px; display: none;">
+        <div style="padding: 15px;">
+            <label style="font-weight: bold; margin-bottom: 15px; display: block;">Calendar Organizer Information:</label>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <div style="flex: 1;">
+                    <label for="organizer-name" style="font-weight: normal;">Your Name:</label>
+                    <input type="text" id="organizer-name" name="organizer-name" placeholder="Your full name" required class="form-input">
+                </div>
+                <div style="flex: 1;">
+                    <label for="organizer-email" style="font-weight: normal;">Your Email:</label>
+                    <input type="email" id="organizer-email" name="organizer-email" placeholder="your.email@company.com" required class="form-input">
+                </div>
+            </div>
+            <div style="font-size: 14px; color: #666; margin-bottom: 15px;">
+                <strong>Note:</strong> Use the email address associated with your calendar system (not your login username).
+                This must be the email where you receive calendar invitations.
+            </div>
+            <button type="button" id="save-organizer-info" class="action-button save-attorneys-button">Save Organizer Information</button>
+        </div>
+    </div>
+
+    <!-- Main Form -->
+    <div class="form-container">
+        <form id="deadline-form">
+            <!-- Case Name -->
+            <div class="form-group">
+                <label for="case-name">Case Name:</label>
+                <div class="custom-select-wrapper">
+                    <input type="text" id="case-name" name="case-name" placeholder="Enter case name or number or select from dropdown" required class="form-input">
+                    <span class="dropdown-arrow">▼</span>
+                    <div id="case-name-dropdown" class="dropdown-list"></div>
+                </div>
+                <div class="management-buttons" style="margin-top: 10px;">
+                    <button type="button" id="manage-cases-button" class="action-button">Manage Saved Case Names</button>
+                </div>
+                <div id="cases-management" class="management-panel">
+                    <h3>Manage Saved Case Names</h3>
+                    <div id="case-items-container" class="item-list"></div>
+                    <div class="attorney-input-row">
+                        <button type="button" id="add-case-button" class="add-attorney-button">Add New Case</button>
+                    </div>
+                    <div class="attorney-input-row" style="margin-top: 15px;">
+                        <button type="button" id="save-cases-button" class="save-attorneys-button">Save Changes</button>
+                        <button type="button" id="cancel-cases-button" class="cancel-button">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deadline Description -->
+            <div class="form-group">
+                <label for="deadline-description">Deadline Description:</label>
+                <div class="custom-select-wrapper">
+                    <input type="text" id="deadline-description" name="deadline-description" placeholder="E.g., MSJ filing Deadline, Response to MSJ Due, Hearing on MSJ" required class="form-input">
+                    <span class="dropdown-arrow">▼</span>
+                    <div id="description-dropdown" class="dropdown-list"></div>
+                </div>
+                <div class="management-buttons" style="margin-top: 10px;">
+                    <button type="button" id="manage-descriptions-button" class="action-button">Manage Deadline Description Database</button>
+                </div>
+                <div id="descriptions-management" class="management-panel">
+                    <h3>Manage Deadline Description Database</h3>
+                    <div id="description-items-container" class="item-list"></div>
+                    <div class="attorney-input-row">
+                        <button type="button" id="add-description-button" class="add-attorney-button">Add New Description</button>
+                    </div>
+                    <div class="attorney-input-row" style="margin-top: 15px;">
+                        <button type="button" id="save-descriptions-button" class="save-attorneys-button">Save Changes</button>
+                        <button type="button" id="cancel-descriptions-button" class="cancel-button">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location -->
+            <div class="form-group">
+                <label for="event-location">Location (for main event only):</label>
+                <div class="custom-select-wrapper">
+                    <input type="text" id="event-location" name="event-location" placeholder="Enter location nickname or select from dropdown" class="form-input">
+                    <span class="dropdown-arrow">▼</span>
+                    <div id="location-dropdown" class="dropdown-list"></div>
+                </div>
+                <div class="management-buttons" style="margin-top: 10px;">
+                    <button type="button" id="manage-locations-button" class="action-button">Manage Locations</button>
+                </div>
+                <div id="locations-management" class="management-panel">
+                    <h3>Manage Locations</h3>
+                    <div id="location-items-container" class="item-list"></div>
+                    <div class="attorney-input-row">
+                        <button type="button" id="add-location-button" class="add-attorney-button">Add New Location</button>
+                    </div>
+                    <div class="attorney-input-row" style="margin-top: 15px;">
+                        <button type="button" id="save-locations-button" class="save-attorneys-button">Save Changes</button>
+                        <button type="button" id="cancel-locations-button" class="cancel-button">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deadline Date and Time -->
+            <div class="form-group">
+                <label for="deadline-date">Deadline Date and Time:</label>
+                <input type="datetime-local" id="deadline-date" name="deadline-date" required class="form-input">
+            </div>
+
+            <!-- Priority Level -->
+            <div class="form-group">
+                <label>Priority Level:</label>
+                <input type="hidden" id="priority-value" value="medium">
+                <div class="priority-selector">
+                    <div class="priority-option priority-low" id="priority-low">Low</div>
+                    <div class="priority-option priority-medium selected" id="priority-medium">Medium</div>
+                    <div class="priority-option priority-high" id="priority-high">High</div>
+                </div>
+            </div>
+
+            <!-- Additional Notes -->
+            <div class="form-group">
+                <label for="additional-notes">Additional Notes (optional):</label>
+                <textarea id="additional-notes" name="additional-notes" placeholder="Enter any additional information about this deadline" class="form-input"></textarea>
+            </div>
+
+            <!-- Event Settings -->
+            <div class="form-group">
+                <label>Event Settings:</label>
+                <div style="margin-top: 10px;">
+                    <label for="main-event-prefix" style="font-weight: normal;">Main Event Prefix:</label>
+                    <select id="main-event-prefix" name="main-event-prefix" class="form-input">
+                        <option value="none">None</option>
+                        <option value="HEARING">NOW</option>
+                        <option value="DUE">DUE</option>
+                        <option value="ALERT">ALERT (🚨)</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                    <input type="text" id="custom-prefix" name="custom-prefix" placeholder="Enter custom prefix" style="display: none; margin-top: 10px;" class="form-input">
+                </div>
+                <div style="display: flex; gap: 15px; margin-top: 10px;">
+                    <div style="flex: 1;">
+                        <label for="event-duration" style="font-weight: normal;">Main Event Duration:</label>
+                        <select id="event-duration" name="event-duration" style="width: 100%;" class="form-input">
+                            <option value="15">15 minutes</option>
+                            <option value="30">30 minutes</option>
+                            <option value="45">45 minutes</option>
+                            <option value="60" selected>1 hour</option>
+                            <option value="120">2 hours</option>
+                            <option value="240">4 hours</option>
+                            <option value="480">8 hours</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="margin-bottom: 10px;">
+                            <label style="font-weight: normal;">Calendar Display:</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="mark-as-busy" name="mark-as-busy" checked>
+                            <label for="mark-as-busy">Mark main event as busy</label>
+                        </div>
+                        <div style="font-size: 13px; color: #666; margin-top: 5px;">
+                            Reminder events will be marked as free
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recipients -->
+            <div class="form-group">
+                <div class="attorneys-header">
+                    <label>Recipients (who should receive this calendar invite):</label>
+                    <button type="button" id="edit-attorneys-button" class="action-button">Manage Team Members</button>
+                </div>
+
+                <div id="attorneys-management" class="attorneys-management" style="display: none;">
+                    <h3>Manage Team Members</h3>
+                    <div id="attorney-inputs-container"></div>
+                    <div class="attorney-input-row">
+                        <button type="button" id="add-attorney-button" class="add-attorney-button">Add New Team Member</button>
+                    </div>
+                    <div class="attorney-input-row" style="margin-top: 15px;">
+                        <button type="button" id="save-attorneys-button" class="save-attorneys-button">Save Changes</button>
+                        <button type="button" id="cancel-edit-button" class="cancel-button">Cancel</button>
+                    </div>
+                </div>
+
+                <div id="recipients-container">
+                    <div class="select-all-container">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="select-all-recipients">
+                            <label for="select-all-recipients">Select All Recipients</label>
+                        </div>
+                    </div>
+                    <div id="recipients-group" class="checkbox-group recipients-group"></div>
+                </div>
+            </div>
+
+            <!-- Reminder Options -->
+            <div class="form-group">
+                <label>Reminder Options:</label>
+                <div class="select-all-container">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="select-all-reminders">
+                        <label for="select-all-reminders">Select All Reminders</label>
+                    </div>
+                </div>
+                <div class="checkbox-group" id="reminders-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reminder-7am" name="reminders" class="reminder-option" value="7AM Day Of" data-days="0" data-hours="0" data-special="7am">
+                        <label for="reminder-7am">7AM Day Of Deadline</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reminder-1d" name="reminders" class="reminder-option" value="1 Day" data-days="1" data-hours="0">
+                        <label for="reminder-1d">1 Day Before</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reminder-2d" name="reminders" class="reminder-option" value="2 Days" data-days="2" data-hours="0">
+                        <label for="reminder-2d">2 Days Before</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reminder-3d" name="reminders" class="reminder-option" value="3 Days" data-days="3" data-hours="0">
+                        <label for="reminder-3d">3 Days Before</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reminder-1w" name="reminders" class="reminder-option" value="1 Week" data-days="7" data-hours="0">
+                        <label for="reminder-1w">1 Week Before</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reminder-2w" name="reminders" class="reminder-option" value="2 Weeks" data-days="14" data-hours="0">
+                        <label for="reminder-2w">2 Weeks Before</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reminder-1m" name="reminders" class="reminder-option" value="1 Month" data-days="30" data-hours="0">
+                        <label for="reminder-1m">1 Month Before</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Download Format -->
+            <div class="form-group">
+                <label for="download-type">Download Format:</label>
+                <select id="download-type" name="download-type" class="form-input">
+                    <option value="combined">Single File (All Events)</option>
+                    <option value="separate">Separate Files</option>
+                </select>
+            </div>
+
+            <button type="button" id="generate-button" class="action-button">Generate Calendar Files</button>
+        </form>
+
+        <div id="status-message" class="status"></div>
+
+        <!-- Download container -->
+        <div id="download-container" class="download-box" style="display: none;">
+            <h3>Your Calendar Files</h3>
+            <p>Click each link below to download:</p>
+            <div id="download-links"></div>
+
+            <button id="download-all-button" class="download-all-button action-button">Download All Files</button>
+
+            <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #ddd;">
+                <h3 style="margin-top: 0;">How to Save These Calendar Files</h3>
+                <ol>
+                    <li>Click each blue link above to download</li>
+                    <li>If clicking doesn't work, try right-clicking and select "Save Link As..."</li>
+                    <li>Save the file to a location on your computer</li>
+                    <li>Double-click the downloaded .ics file to add it to your calendar</li>
+                </ol>
+                <p><strong>Note:</strong> To add these events to your Outlook calendar, simply double-click each downloaded .ics file and follow the prompts.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="instructions">
+        <h3>How to Use This Tool:</h3>
+        <ol>
+            <li>Enter the case name/number or select from dropdown of previously used matters.</li>
+            <li>Enter the deadline description or select from dropdown.</li>
+            <li>Enter the location for the main event (optional, use nickname or select from saved locations).</li>
+            <li>Set the deadline date and time.</li>
+            <li>Choose a priority level.</li>
+            <li>Add any additional notes if needed.</li>
+            <li>Select which team members should receive the calendar invites (listed in description).</li>
+            <li>Select which reminder(s) you want to generate.</li>
+            <li>Choose your preferred download format (single file or separate files).</li>
+            <li>Click "Generate Calendar Files".</li>
+            <li>Save each calendar file or use "Download All" to get all files at once.</li>
+            <li>Import the saved .ics files into your calendar application (Outlook, Google Calendar, etc.).</li>
+        </ol>
+        <h3>After Generating Calendar Files:</h3>
+        <p>Follow these steps to handle the generated calendar files:</p>
+        <ol>
+            <li>Import the .ics files into a secondary staging calendar in your calendar application.</li>
+            <li>For each imported event, open it and look for the "Intended Recipients" list in the description.</li>
+            <li>Copy the list of intended recipients and manually send out invitations to them.</li>
+            <li>Once invitations are sent, move the event from the staging calendar to your main calendar.</li>
+        </ol>
+        <p>This process ensures that all events are properly distributed and tracked.</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>C.A.L.E.N.D.A.R. - Calendar Assistant for Legal Events, Notices, Deadlines, and Automated Reminders</p>
+        <p>Built by <a href="https://github.com/AustinBrister" target="_blank">Austin Brister</a></p>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
