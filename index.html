@@ -8,164 +8,218 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div class="header-container">
-        <div class="creator-image" id="creator-image">
-            <img src="assets/ML Icon.png" alt="C.A.L.E.N.D.A.R. Icon">
-        </div>
-        <div class="creator-tagline">Austin Brister's wonderful</div>
-        <h1 class="app-title">C.A.L.E.N.D.A.R.</h1>
-        <div class="app-subtitle">Calendar Assistant for Legal Events, Notices, Deadlines, and Automated Reminders</div>
-        <div id="dark-mode-toggle" class="dark-mode-toggle">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <button type="button" id="settings-button" class="icon-button" title="Settings">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+        </button>
+        <div id="dark-mode-toggle" class="icon-button" title="Toggle dark mode">
             <span id="dark-mode-icon">🌞</span>
         </div>
     </div>
 
-    <!-- Import/Export options -->
-    <div class="import-export-container">
-        <button type="button" id="export-settings-button" class="action-button">Export Settings</button>
-        <label for="import-settings" class="settings-file-label">Import Settings</label>
-        <input type="file" id="import-settings" accept=".json">
-        <button type="button" id="toggle-organizer-info" class="action-button">Organizer Settings ▼</button>
-    </div>
-
-    <!-- Organizer Panel -->
-    <div id="organizer-panel" class="form-container" style="margin-bottom: 20px; display: none;">
-        <div style="padding: 15px;">
-            <label style="font-weight: bold; margin-bottom: 15px; display: block;">Calendar Organizer Information:</label>
-            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                <div style="flex: 1;">
-                    <label for="organizer-name" style="font-weight: normal;">Your Name:</label>
-                    <input type="text" id="organizer-name" name="organizer-name" placeholder="Your full name" required class="form-input">
-                </div>
-                <div style="flex: 1;">
-                    <label for="organizer-email" style="font-weight: normal;">Your Email:</label>
-                    <input type="email" id="organizer-email" name="organizer-email" placeholder="your.email@company.com" required class="form-input">
-                </div>
-            </div>
-            <div style="font-size: 14px; color: #666; margin-bottom: 15px;">
-                <strong>Note:</strong> Use the email address associated with your calendar system (not your login username).
-                This must be the email where you receive calendar invitations.
-            </div>
-            <button type="button" id="save-organizer-info" class="action-button save-attorneys-button">Save Organizer Information</button>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo-container">
+            <img src="assets/ML Icon.png" alt="C.A.L.E.N.D.A.R. Icon" class="logo">
         </div>
-    </div>
+        <div class="creator-tagline">Austin Brister's wonderful</div>
+        <h1 class="app-title">C.A.L.E.N.D.A.R.</h1>
+        <p class="app-subtitle">Calendar Assistant for Legal Events, Notices, Deadlines, and Automated Reminders</p>
+    </header>
 
-    <!-- Main Form -->
-    <div class="form-container">
-        <form id="deadline-form">
-            <!-- Case Name -->
-            <div class="form-group">
-                <label for="case-name">Case Name:</label>
-                <div class="custom-select-wrapper">
-                    <input type="text" id="case-name" name="case-name" placeholder="Enter case name or number or select from dropdown" required class="form-input">
-                    <span class="dropdown-arrow">▼</span>
-                    <div id="case-name-dropdown" class="dropdown-list"></div>
-                </div>
-                <div class="management-buttons" style="margin-top: 10px;">
-                    <button type="button" id="manage-cases-button" class="action-button">Manage Saved Case Names</button>
-                </div>
-                <div id="cases-management" class="management-panel">
-                    <h3>Manage Saved Case Names</h3>
-                    <div id="case-items-container" class="item-list"></div>
-                    <div class="attorney-input-row">
-                        <button type="button" id="add-case-button" class="add-attorney-button">Add New Case</button>
+    <!-- Main Form - Streamlined -->
+    <main class="main-container">
+        <form id="deadline-form" class="deadline-form">
+            <!-- Essential Fields -->
+            <div class="form-card">
+                <!-- Case Name -->
+                <div class="form-field">
+                    <label for="case-name">Case</label>
+                    <div class="select-input">
+                        <input type="text" id="case-name" name="case-name" placeholder="Select or enter case name" required>
+                        <button type="button" class="dropdown-trigger" data-dropdown="case-name-dropdown">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div id="case-name-dropdown" class="dropdown-menu"></div>
                     </div>
-                    <div class="attorney-input-row" style="margin-top: 15px;">
-                        <button type="button" id="save-cases-button" class="save-attorneys-button">Save Changes</button>
-                        <button type="button" id="cancel-cases-button" class="cancel-button">Cancel</button>
+                </div>
+
+                <!-- Description -->
+                <div class="form-field">
+                    <label for="deadline-description">Event Type</label>
+                    <div class="select-input">
+                        <input type="text" id="deadline-description" name="deadline-description" placeholder="Select or enter description" required>
+                        <button type="button" class="dropdown-trigger" data-dropdown="description-dropdown">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div id="description-dropdown" class="dropdown-menu"></div>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="form-field">
+                    <label for="event-location">Location <span class="optional">(optional)</span></label>
+                    <div class="select-input">
+                        <input type="text" id="event-location" name="event-location" placeholder="Select or enter location">
+                        <button type="button" class="dropdown-trigger" data-dropdown="location-dropdown">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div id="location-dropdown" class="dropdown-menu"></div>
+                    </div>
+                </div>
+
+                <!-- Date/Time -->
+                <div class="form-field">
+                    <label for="deadline-date">Date & Time</label>
+                    <input type="datetime-local" id="deadline-date" name="deadline-date" required>
+                </div>
+            </div>
+
+            <!-- Recipients Summary -->
+            <div class="form-card collapsible">
+                <div class="card-header" data-toggle="recipients-panel">
+                    <div class="card-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>Recipients</span>
+                    </div>
+                    <div class="card-summary">
+                        <span id="recipients-summary">0 selected</span>
+                        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                <div id="recipients-panel" class="card-content">
+                    <div class="select-all-row">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="select-all-recipients">
+                            <span>Select All</span>
+                        </label>
+                    </div>
+                    <div id="recipients-group" class="checkbox-grid"></div>
+                    <div id="no-recipients-message" class="empty-message" style="display: none;">
+                        No team members configured. Add them in Settings.
                     </div>
                 </div>
             </div>
 
-            <!-- Deadline Description -->
-            <div class="form-group">
-                <label for="deadline-description">Deadline Description:</label>
-                <div class="custom-select-wrapper">
-                    <input type="text" id="deadline-description" name="deadline-description" placeholder="E.g., MSJ filing Deadline, Response to MSJ Due, Hearing on MSJ" required class="form-input">
-                    <span class="dropdown-arrow">▼</span>
-                    <div id="description-dropdown" class="dropdown-list"></div>
-                </div>
-                <div class="management-buttons" style="margin-top: 10px;">
-                    <button type="button" id="manage-descriptions-button" class="action-button">Manage Deadline Description Database</button>
-                </div>
-                <div id="descriptions-management" class="management-panel">
-                    <h3>Manage Deadline Description Database</h3>
-                    <div id="description-items-container" class="item-list"></div>
-                    <div class="attorney-input-row">
-                        <button type="button" id="add-description-button" class="add-attorney-button">Add New Description</button>
+            <!-- Reminders Summary -->
+            <div class="form-card collapsible">
+                <div class="card-header" data-toggle="reminders-panel">
+                    <div class="card-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span>Reminders</span>
                     </div>
-                    <div class="attorney-input-row" style="margin-top: 15px;">
-                        <button type="button" id="save-descriptions-button" class="save-attorneys-button">Save Changes</button>
-                        <button type="button" id="cancel-descriptions-button" class="cancel-button">Cancel</button>
+                    <div class="card-summary">
+                        <span id="reminders-summary">0 selected</span>
+                        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </div>
                 </div>
-            </div>
-
-            <!-- Location -->
-            <div class="form-group">
-                <label for="event-location">Location (for main event only):</label>
-                <div class="custom-select-wrapper">
-                    <input type="text" id="event-location" name="event-location" placeholder="Enter location nickname or select from dropdown" class="form-input">
-                    <span class="dropdown-arrow">▼</span>
-                    <div id="location-dropdown" class="dropdown-list"></div>
-                </div>
-                <div class="management-buttons" style="margin-top: 10px;">
-                    <button type="button" id="manage-locations-button" class="action-button">Manage Locations</button>
-                </div>
-                <div id="locations-management" class="management-panel">
-                    <h3>Manage Locations</h3>
-                    <div id="location-items-container" class="item-list"></div>
-                    <div class="attorney-input-row">
-                        <button type="button" id="add-location-button" class="add-attorney-button">Add New Location</button>
+                <div id="reminders-panel" class="card-content">
+                    <div class="select-all-row">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="select-all-reminders">
+                            <span>Select All</span>
+                        </label>
                     </div>
-                    <div class="attorney-input-row" style="margin-top: 15px;">
-                        <button type="button" id="save-locations-button" class="save-attorneys-button">Save Changes</button>
-                        <button type="button" id="cancel-locations-button" class="cancel-button">Cancel</button>
+                    <div id="reminders-group" class="checkbox-grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="reminder-7am" name="reminders" class="reminder-option" value="7AM Day Of" data-days="0" data-hours="0" data-special="7am">
+                            <span>7AM Day Of</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="reminder-1d" name="reminders" class="reminder-option" value="1 Day" data-days="1" data-hours="0">
+                            <span>1 Day Before</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="reminder-2d" name="reminders" class="reminder-option" value="2 Days" data-days="2" data-hours="0">
+                            <span>2 Days Before</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="reminder-3d" name="reminders" class="reminder-option" value="3 Days" data-days="3" data-hours="0">
+                            <span>3 Days Before</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="reminder-1w" name="reminders" class="reminder-option" value="1 Week" data-days="7" data-hours="0">
+                            <span>1 Week Before</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="reminder-2w" name="reminders" class="reminder-option" value="2 Weeks" data-days="14" data-hours="0">
+                            <span>2 Weeks Before</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="reminder-1m" name="reminders" class="reminder-option" value="1 Month" data-days="30" data-hours="0">
+                            <span>1 Month Before</span>
+                        </label>
                     </div>
                 </div>
             </div>
 
-            <!-- Deadline Date and Time -->
-            <div class="form-group">
-                <label for="deadline-date">Deadline Date and Time:</label>
-                <input type="datetime-local" id="deadline-date" name="deadline-date" required class="form-input">
-            </div>
-
-            <!-- Priority Level -->
-            <div class="form-group">
-                <label>Priority Level:</label>
-                <input type="hidden" id="priority-value" value="medium">
-                <div class="priority-selector">
-                    <div class="priority-option priority-low" id="priority-low">Low</div>
-                    <div class="priority-option priority-medium selected" id="priority-medium">Medium</div>
-                    <div class="priority-option priority-high" id="priority-high">High</div>
+            <!-- Advanced Options -->
+            <div class="form-card collapsible collapsed">
+                <div class="card-header" data-toggle="advanced-panel">
+                    <div class="card-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        <span>Advanced Options</span>
+                    </div>
+                    <div class="card-summary">
+                        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
                 </div>
-            </div>
+                <div id="advanced-panel" class="card-content">
+                    <!-- Priority -->
+                    <div class="form-field">
+                        <label>Priority</label>
+                        <input type="hidden" id="priority-value" value="medium">
+                        <div class="priority-selector">
+                            <button type="button" class="priority-btn priority-low" data-priority="low">Low</button>
+                            <button type="button" class="priority-btn priority-medium selected" data-priority="medium">Medium</button>
+                            <button type="button" class="priority-btn priority-high" data-priority="high">High</button>
+                        </div>
+                    </div>
 
-            <!-- Additional Notes -->
-            <div class="form-group">
-                <label for="additional-notes">Additional Notes (optional):</label>
-                <textarea id="additional-notes" name="additional-notes" placeholder="Enter any additional information about this deadline" class="form-input"></textarea>
-            </div>
+                    <!-- Event Prefix -->
+                    <div class="form-field">
+                        <label for="main-event-prefix">Event Prefix</label>
+                        <select id="main-event-prefix" name="main-event-prefix">
+                            <option value="none">None</option>
+                            <option value="HEARING">NOW</option>
+                            <option value="DUE">DUE</option>
+                            <option value="ALERT">ALERT</option>
+                            <option value="custom">Custom...</option>
+                        </select>
+                        <input type="text" id="custom-prefix" name="custom-prefix" placeholder="Enter custom prefix" class="custom-prefix-input" style="display: none;">
+                    </div>
 
-            <!-- Event Settings -->
-            <div class="form-group">
-                <label>Event Settings:</label>
-                <div style="margin-top: 10px;">
-                    <label for="main-event-prefix" style="font-weight: normal;">Main Event Prefix:</label>
-                    <select id="main-event-prefix" name="main-event-prefix" class="form-input">
-                        <option value="none">None</option>
-                        <option value="HEARING">NOW</option>
-                        <option value="DUE">DUE</option>
-                        <option value="ALERT">ALERT (🚨)</option>
-                        <option value="custom">Custom</option>
-                    </select>
-                    <input type="text" id="custom-prefix" name="custom-prefix" placeholder="Enter custom prefix" style="display: none; margin-top: 10px;" class="form-input">
-                </div>
-                <div style="display: flex; gap: 15px; margin-top: 10px;">
-                    <div style="flex: 1;">
-                        <label for="event-duration" style="font-weight: normal;">Main Event Duration:</label>
-                        <select id="event-duration" name="event-duration" style="width: 100%;" class="form-input">
+                    <!-- Duration -->
+                    <div class="form-field">
+                        <label for="event-duration">Event Duration</label>
+                        <select id="event-duration" name="event-duration">
                             <option value="15">15 minutes</option>
                             <option value="30">30 minutes</option>
                             <option value="45">45 minutes</option>
@@ -175,160 +229,187 @@
                             <option value="480">8 hours</option>
                         </select>
                     </div>
-                    <div style="flex: 1;">
-                        <div style="margin-bottom: 10px;">
-                            <label style="font-weight: normal;">Calendar Display:</label>
-                        </div>
-                        <div class="checkbox-item">
+
+                    <!-- Busy Status -->
+                    <div class="form-field">
+                        <label class="checkbox-label inline">
                             <input type="checkbox" id="mark-as-busy" name="mark-as-busy" checked>
-                            <label for="mark-as-busy">Mark main event as busy</label>
-                        </div>
-                        <div style="font-size: 13px; color: #666; margin-top: 5px;">
-                            Reminder events will be marked as free
-                        </div>
+                            <span>Mark main event as busy</span>
+                        </label>
+                    </div>
+
+                    <!-- Additional Notes -->
+                    <div class="form-field">
+                        <label for="additional-notes">Notes</label>
+                        <textarea id="additional-notes" name="additional-notes" placeholder="Additional notes (optional)" rows="3"></textarea>
+                    </div>
+
+                    <!-- Download Format -->
+                    <div class="form-field">
+                        <label for="download-type">Download Format</label>
+                        <select id="download-type" name="download-type">
+                            <option value="combined">Single File (All Events)</option>
+                            <option value="separate">Separate Files</option>
+                        </select>
                     </div>
                 </div>
             </div>
 
-            <!-- Recipients -->
-            <div class="form-group">
-                <div class="attorneys-header">
-                    <label>Recipients (who should receive this calendar invite):</label>
-                    <button type="button" id="edit-attorneys-button" class="action-button">Manage Team Members</button>
-                </div>
-
-                <div id="attorneys-management" class="attorneys-management" style="display: none;">
-                    <h3>Manage Team Members</h3>
-                    <div id="attorney-inputs-container"></div>
-                    <div class="attorney-input-row">
-                        <button type="button" id="add-attorney-button" class="add-attorney-button">Add New Team Member</button>
-                    </div>
-                    <div class="attorney-input-row" style="margin-top: 15px;">
-                        <button type="button" id="save-attorneys-button" class="save-attorneys-button">Save Changes</button>
-                        <button type="button" id="cancel-edit-button" class="cancel-button">Cancel</button>
-                    </div>
-                </div>
-
-                <div id="recipients-container">
-                    <div class="select-all-container">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="select-all-recipients">
-                            <label for="select-all-recipients">Select All Recipients</label>
-                        </div>
-                    </div>
-                    <div id="recipients-group" class="checkbox-group recipients-group"></div>
-                </div>
-            </div>
-
-            <!-- Reminder Options -->
-            <div class="form-group">
-                <label>Reminder Options:</label>
-                <div class="select-all-container">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="select-all-reminders">
-                        <label for="select-all-reminders">Select All Reminders</label>
-                    </div>
-                </div>
-                <div class="checkbox-group" id="reminders-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="reminder-7am" name="reminders" class="reminder-option" value="7AM Day Of" data-days="0" data-hours="0" data-special="7am">
-                        <label for="reminder-7am">7AM Day Of Deadline</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="reminder-1d" name="reminders" class="reminder-option" value="1 Day" data-days="1" data-hours="0">
-                        <label for="reminder-1d">1 Day Before</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="reminder-2d" name="reminders" class="reminder-option" value="2 Days" data-days="2" data-hours="0">
-                        <label for="reminder-2d">2 Days Before</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="reminder-3d" name="reminders" class="reminder-option" value="3 Days" data-days="3" data-hours="0">
-                        <label for="reminder-3d">3 Days Before</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="reminder-1w" name="reminders" class="reminder-option" value="1 Week" data-days="7" data-hours="0">
-                        <label for="reminder-1w">1 Week Before</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="reminder-2w" name="reminders" class="reminder-option" value="2 Weeks" data-days="14" data-hours="0">
-                        <label for="reminder-2w">2 Weeks Before</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="reminder-1m" name="reminders" class="reminder-option" value="1 Month" data-days="30" data-hours="0">
-                        <label for="reminder-1m">1 Month Before</label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Download Format -->
-            <div class="form-group">
-                <label for="download-type">Download Format:</label>
-                <select id="download-type" name="download-type" class="form-input">
-                    <option value="combined">Single File (All Events)</option>
-                    <option value="separate">Separate Files</option>
-                </select>
-            </div>
-
-            <button type="button" id="generate-button" class="action-button">Generate Calendar Files</button>
+            <!-- Generate Button -->
+            <button type="button" id="generate-button" class="generate-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>Generate Calendar</span>
+            </button>
         </form>
 
-        <div id="status-message" class="status"></div>
+        <!-- Status Message -->
+        <div id="status-message" class="status-message"></div>
 
-        <!-- Download container -->
-        <div id="download-container" class="download-box" style="display: none;">
+        <!-- Download Container -->
+        <div id="download-container" class="download-container">
             <h3>Your Calendar Files</h3>
-            <p>Click each link below to download:</p>
-            <div id="download-links"></div>
+            <div id="download-links" class="download-links"></div>
+            <button id="download-all-button" class="download-all-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Download All</span>
+            </button>
+        </div>
+    </main>
 
-            <button id="download-all-button" class="download-all-button action-button">Download All Files</button>
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button type="button" class="modal-close" id="close-settings">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Settings Tabs -->
+                <div class="settings-tabs">
+                    <button type="button" class="tab-btn active" data-tab="organizer">Organizer</button>
+                    <button type="button" class="tab-btn" data-tab="team">Team</button>
+                    <button type="button" class="tab-btn" data-tab="cases">Cases</button>
+                    <button type="button" class="tab-btn" data-tab="descriptions">Descriptions</button>
+                    <button type="button" class="tab-btn" data-tab="locations">Locations</button>
+                    <button type="button" class="tab-btn" data-tab="data">Import/Export</button>
+                </div>
 
-            <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #ddd;">
-                <h3 style="margin-top: 0;">How to Save These Calendar Files</h3>
-                <ol>
-                    <li>Click each blue link above to download</li>
-                    <li>If clicking doesn't work, try right-clicking and select "Save Link As..."</li>
-                    <li>Save the file to a location on your computer</li>
-                    <li>Double-click the downloaded .ics file to add it to your calendar</li>
-                </ol>
-                <p><strong>Note:</strong> To add these events to your Outlook calendar, simply double-click each downloaded .ics file and follow the prompts.</p>
+                <!-- Organizer Tab -->
+                <div id="tab-organizer" class="tab-content active">
+                    <p class="tab-description">Your information for calendar invites</p>
+                    <div class="form-field">
+                        <label for="organizer-name">Your Name</label>
+                        <input type="text" id="organizer-name" name="organizer-name" placeholder="Full name">
+                    </div>
+                    <div class="form-field">
+                        <label for="organizer-email">Your Email</label>
+                        <input type="email" id="organizer-email" name="organizer-email" placeholder="email@example.com">
+                    </div>
+                    <button type="button" id="save-organizer-info" class="save-btn">Save Organizer Info</button>
+                </div>
+
+                <!-- Team Tab -->
+                <div id="tab-team" class="tab-content">
+                    <p class="tab-description">Team members who can receive calendar invites</p>
+                    <div id="attorney-inputs-container" class="items-list"></div>
+                    <button type="button" id="add-attorney-button" class="add-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add Team Member
+                    </button>
+                    <button type="button" id="save-attorneys-button" class="save-btn">Save Team</button>
+                </div>
+
+                <!-- Cases Tab -->
+                <div id="tab-cases" class="tab-content">
+                    <p class="tab-description">Saved cases with default recipients</p>
+                    <div id="case-items-container" class="items-list"></div>
+                    <button type="button" id="add-case-button" class="add-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add Case
+                    </button>
+                    <button type="button" id="save-cases-button" class="save-btn">Save Cases</button>
+                </div>
+
+                <!-- Descriptions Tab -->
+                <div id="tab-descriptions" class="tab-content">
+                    <p class="tab-description">Event types with default reminders</p>
+                    <div id="description-items-container" class="items-list"></div>
+                    <button type="button" id="add-description-button" class="add-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add Description
+                    </button>
+                    <button type="button" id="save-descriptions-button" class="save-btn">Save Descriptions</button>
+                </div>
+
+                <!-- Locations Tab -->
+                <div id="tab-locations" class="tab-content">
+                    <p class="tab-description">Saved locations with full addresses</p>
+                    <div id="location-items-container" class="items-list"></div>
+                    <button type="button" id="add-location-button" class="add-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add Location
+                    </button>
+                    <button type="button" id="save-locations-button" class="save-btn">Save Locations</button>
+                </div>
+
+                <!-- Import/Export Tab -->
+                <div id="tab-data" class="tab-content">
+                    <p class="tab-description">Backup and restore your settings</p>
+                    <div class="data-actions">
+                        <button type="button" id="export-settings-button" class="action-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            Export Settings
+                        </button>
+                        <label class="action-btn import-label">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Import Settings
+                            <input type="file" id="import-settings" accept=".json" style="display: none;">
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Instructions -->
-    <div class="instructions">
-        <h3>How to Use This Tool:</h3>
-        <ol>
-            <li>Enter the case name/number or select from dropdown of previously used matters.</li>
-            <li>Enter the deadline description or select from dropdown.</li>
-            <li>Enter the location for the main event (optional, use nickname or select from saved locations).</li>
-            <li>Set the deadline date and time.</li>
-            <li>Choose a priority level.</li>
-            <li>Add any additional notes if needed.</li>
-            <li>Select which team members should receive the calendar invites (listed in description).</li>
-            <li>Select which reminder(s) you want to generate.</li>
-            <li>Choose your preferred download format (single file or separate files).</li>
-            <li>Click "Generate Calendar Files".</li>
-            <li>Save each calendar file or use "Download All" to get all files at once.</li>
-            <li>Import the saved .ics files into your calendar application (Outlook, Google Calendar, etc.).</li>
-        </ol>
-        <h3>After Generating Calendar Files:</h3>
-        <p>Follow these steps to handle the generated calendar files:</p>
-        <ol>
-            <li>Import the .ics files into a secondary staging calendar in your calendar application.</li>
-            <li>For each imported event, open it and look for the "Intended Recipients" list in the description.</li>
-            <li>Copy the list of intended recipients and manually send out invitations to them.</li>
-            <li>Once invitations are sent, move the event from the staging calendar to your main calendar.</li>
-        </ol>
-        <p>This process ensures that all events are properly distributed and tracked.</p>
-    </div>
-
     <!-- Footer -->
-    <div class="footer">
-        <p>C.A.L.E.N.D.A.R. - Calendar Assistant for Legal Events, Notices, Deadlines, and Automated Reminders</p>
+    <footer class="footer">
         <p>Built by <a href="https://github.com/AustinBrister" target="_blank">Austin Brister</a></p>
-    </div>
+    </footer>
 
     <script src="js/app.js"></script>
 </body>
