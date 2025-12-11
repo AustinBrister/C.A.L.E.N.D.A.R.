@@ -79,25 +79,22 @@ body {
 }
 
 /* ============================================
-   Top Bar
+   Top Bar (within header)
    ============================================ */
 .top-bar {
-    position: fixed;
-    top: 0;
-    right: 0;
     display: flex;
-    gap: 8px;
-    padding: 16px 24px;
-    z-index: 100;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
 }
 
 .icon-button {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-primary);
+    background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-full);
     color: var(--text-secondary);
@@ -107,8 +104,9 @@ body {
 }
 
 .icon-button:hover {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
+    background: var(--accent-light);
+    border-color: var(--accent);
+    color: var(--accent);
     transform: scale(1.05);
 }
 
@@ -117,7 +115,7 @@ body {
    ============================================ */
 .header {
     text-align: center;
-    padding: 60px 24px 40px;
+    padding: 32px 24px 40px;
     background: var(--bg-primary);
     border-bottom: 1px solid var(--border-color);
 }
@@ -688,7 +686,7 @@ body.dark-mode .priority-btn.priority-high.selected {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
-    max-width: 600px;
+    max-width: 750px;
     max-height: 85vh;
     background: var(--bg-primary);
     border-radius: var(--radius-lg);
@@ -970,7 +968,7 @@ body.dark-mode .priority-btn.priority-high.selected {
    ============================================ */
 @media (max-width: 640px) {
     .header {
-        padding: 48px 16px 32px;
+        padding: 24px 16px 32px;
     }
 
     .app-title {
@@ -1001,6 +999,14 @@ body.dark-mode .priority-btn.priority-high.selected {
 
     .data-actions {
         flex-direction: column;
+    }
+
+    .item-row {
+        flex-wrap: wrap;
+    }
+
+    .item-row input {
+        min-width: 100px;
     }
 }
 
