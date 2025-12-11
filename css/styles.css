@@ -660,6 +660,30 @@ body.dark-mode .priority-btn.priority-high.selected {
     background: #059669;
 }
 
+.create-similar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 20px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    color: var(--accent);
+    background: var(--accent-light);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.create-similar-btn:hover {
+    background: var(--accent);
+    color: white;
+}
+
 /* ============================================
    Modal
    ============================================ */
@@ -1047,4 +1071,263 @@ body.dark-mode .priority-btn.priority-high.selected {
 @keyframes hintFade {
     from { opacity: 0; transform: translateY(-4px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   Case Dropdown with Favorites/Recent
+   ============================================ */
+.dropdown-item.case-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+}
+
+.case-name-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.star-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition);
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.star-btn:hover {
+    background: var(--bg-tertiary);
+    color: var(--warning);
+}
+
+.star-btn.starred {
+    color: var(--warning);
+}
+
+.star-btn.starred:hover {
+    color: var(--text-muted);
+}
+
+.dropdown-item-header .section-icon {
+    margin-right: 6px;
+}
+
+/* ============================================
+   Calendar Preview
+   ============================================ */
+.calendar-preview {
+    display: none;
+    margin-top: 12px;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    animation: fadeIn 0.2s ease;
+}
+
+.calendar-preview.show {
+    display: block;
+}
+
+.calendar-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.calendar-month-year {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.calendar-day-name {
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.calendar-grid {
+    font-size: 12px;
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.calendar-weekdays span {
+    padding: 4px 0;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 11px;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition);
+    cursor: pointer;
+}
+
+.calendar-day:not(.other-month):hover {
+    background: var(--accent-light);
+    color: var(--accent);
+}
+
+.calendar-day.other-month {
+    color: var(--text-muted);
+    opacity: 0.4;
+    cursor: default;
+}
+
+.calendar-day.today {
+    background: var(--bg-tertiary);
+    font-weight: 600;
+}
+
+.calendar-day.selected {
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+}
+
+.calendar-day.weekend {
+    color: var(--text-muted);
+}
+
+.calendar-day.selected.weekend {
+    color: white;
+}
+
+/* Weekend warning indicator */
+.calendar-preview.weekend-warning .calendar-preview-header {
+    border-bottom-color: var(--warning);
+}
+
+.calendar-preview.weekend-warning .calendar-day-name {
+    color: var(--warning);
+}
+
+.calendar-preview.weekend-warning .calendar-day-name::after {
+    content: " ⚠";
+}
+
+/* Date field display input */
+#deadline-date-display {
+    cursor: pointer;
+}
+
+/* Weekend warning message (persistent, outside calendar) */
+.weekend-warning-message {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--warning);
+    background: var(--warning-bg);
+    border: 1px solid var(--warning);
+    border-radius: var(--radius-md);
+    animation: fadeIn 0.2s ease;
+}
+
+.weekend-warning-message.show {
+    display: flex;
+}
+
+.weekend-warning-message svg {
+    flex-shrink: 0;
+}
+
+/* Time picker in calendar preview */
+.calendar-time-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.quick-times {
+    display: flex;
+    gap: 6px;
+}
+
+.quick-time-btn {
+    flex: 1;
+    padding: 8px 4px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--text-secondary);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.quick-time-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.quick-time-btn.selected {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+
+.custom-time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.custom-time select {
+    flex: 1;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+.custom-time select:focus {
+    outline: none;
+    border-color: var(--border-focus);
 }

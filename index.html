@@ -87,9 +87,61 @@
                 </div>
 
                 <!-- Date/Time -->
-                <div class="form-field">
-                    <label for="deadline-date">Date & Time</label>
-                    <input type="datetime-local" id="deadline-date" name="deadline-date" required>
+                <div class="form-field date-field">
+                    <label for="deadline-date-display">Date & Time</label>
+                    <input type="text" id="deadline-date-display" placeholder="Click to select date & time" readonly>
+                    <input type="hidden" id="deadline-date" name="deadline-date">
+                    <div id="weekend-warning" class="weekend-warning-message">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <span>This date falls on a weekend</span>
+                    </div>
+                    <!-- Calendar Preview -->
+                    <div id="calendar-preview" class="calendar-preview">
+                        <div class="calendar-preview-header">
+                            <span class="calendar-month-year"></span>
+                            <span class="calendar-day-name"></span>
+                        </div>
+                        <div class="calendar-grid">
+                            <div class="calendar-weekdays">
+                                <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                            </div>
+                            <div class="calendar-days"></div>
+                        </div>
+                        <div class="calendar-time-picker">
+                            <div class="quick-times">
+                                <button type="button" class="quick-time-btn" data-hour="07" data-minute="00">7 AM</button>
+                                <button type="button" class="quick-time-btn" data-hour="09" data-minute="00">9 AM</button>
+                                <button type="button" class="quick-time-btn" data-hour="13" data-minute="00">1 PM</button>
+                                <button type="button" class="quick-time-btn" data-hour="17" data-minute="00">5 PM</button>
+                            </div>
+                            <div class="custom-time">
+                                <select id="calendar-hour">
+                                    <option value="07">7 AM</option>
+                                    <option value="08">8 AM</option>
+                                    <option value="09">9 AM</option>
+                                    <option value="10">10 AM</option>
+                                    <option value="11">11 AM</option>
+                                    <option value="12">12 PM</option>
+                                    <option value="13">1 PM</option>
+                                    <option value="14">2 PM</option>
+                                    <option value="15">3 PM</option>
+                                    <option value="16">4 PM</option>
+                                    <option value="17" selected>5 PM</option>
+                                    <option value="18">6 PM</option>
+                                </select>
+                                <select id="calendar-minute">
+                                    <option value="00" selected>:00</option>
+                                    <option value="15">:15</option>
+                                    <option value="30">:30</option>
+                                    <option value="45">:45</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -289,6 +341,13 @@
                     <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
                 <span>Download All</span>
+            </button>
+            <button id="create-similar-button" class="create-similar-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span>Create Similar</span>
             </button>
         </div>
     </main>

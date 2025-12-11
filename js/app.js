@@ -21,16 +21,19 @@ const DEFAULT_PRESET_DESCRIPTIONS = {
     "Standard Filing Deadline": {
         reminders: ["7AM Day Of", "1 Day", "3 Days", "1 Week", "1 Month"],
         defaultText: "Filing Deadline",
+        defaultTime: { hour: "17", minute: "00" }, // 5 PM
         isPreset: true
     },
     "Standard Hearing Date": {
         reminders: ["7AM Day Of", "1 Day", "3 Days", "1 Week"],
         defaultText: "Hearing",
+        defaultTime: { hour: "09", minute: "00" }, // 9 AM
         isPreset: true
     },
     "Standard MSJ Hearing": {
         reminders: ["7AM Day Of", "1 Day", "3 Days", "1 Week", "2 Weeks", "1 Month"],
         defaultText: "MSJ Hearing",
+        defaultTime: { hour: "09", minute: "00" }, // 9 AM
         isPreset: true
     }
 };
@@ -124,6 +127,9 @@ function initializeAppData() {
                 !appData.presetDescriptions || !appData.locations) {
                 throw new Error("Invalid data structure");
             }
+            // Ensure recentCases and favoriteCases exist (migration for existing users)
+            if (!appData.recentCases) appData.recentCases = [];
+            if (!appData.favoriteCases) appData.favoriteCases = [];
         } else {
             appData = null;
         }
@@ -139,7 +145,9 @@ function initializeAppData() {
             attorneys: DEFAULT_ATTORNEYS,
             presetDescriptions: DEFAULT_PRESET_DESCRIPTIONS,
             locations: [],
-            organizer: { name: "", email: "" }
+            organizer: { name: "", email: "" },
+            recentCases: [],
+            favoriteCases: []
         };
         localStorage.setItem(APP_DATA_KEY, JSON.stringify(initialData));
         appData = initialData;
@@ -249,18 +257,241 @@ function loadOrganizerInfo() {
 // ============================================
 // Date/Time Utilities
 // ============================================
+let selectedCalendarDate = null; // Track the currently selected date in the picker
+
 function setDefaultDateTime() {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(17, 0, 0, 0);
 
-    const year = tomorrow.getFullYear();
-    const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
-    const day = String(tomorrow.getDate()).padStart(2, '0');
-    const hours = String(tomorrow.getHours()).padStart(2, '0');
-    const minutes = String(tomorrow.getMinutes()).padStart(2, '0');
+    selectedCalendarDate = tomorrow;
+    updateDateValue();
+}
 
+function updateDateValue() {
+    if (!selectedCalendarDate) return;
+
+    const hour = document.getElementById('calendar-hour')?.value || '17';
+    const minute = document.getElementById('calendar-minute')?.value || '00';
+
+    selectedCalendarDate.setHours(parseInt(hour), parseInt(minute), 0, 0);
+
+    const year = selectedCalendarDate.getFullYear();
+    const month = String(selectedCalendarDate.getMonth() + 1).padStart(2, '0');
+    const day = String(selectedCalendarDate.getDate()).padStart(2, '0');
+    const hours = String(selectedCalendarDate.getHours()).padStart(2, '0');
+    const minutes = String(selectedCalendarDate.getMinutes()).padStart(2, '0');
+
+    // Update hidden input
     document.getElementById('deadline-date').value = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+    // Update display input
+    const displayDate = selectedCalendarDate.toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    });
+    const displayTime = selectedCalendarDate.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
+    document.getElementById('deadline-date-display').value = `${displayDate} at ${displayTime}`;
+
+    // Show/hide weekend warning
+    const dayOfWeek = selectedCalendarDate.getDay();
+    const weekendWarning = document.getElementById('weekend-warning');
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+        weekendWarning.classList.add('show');
+    } else {
+        weekendWarning.classList.remove('show');
+    }
+}
+
+function setTimeFromPreset(hour, minute) {
+    // Update the time dropdowns
+    const hourSelect = document.getElementById('calendar-hour');
+    const minuteSelect = document.getElementById('calendar-minute');
+
+    if (hourSelect) hourSelect.value = hour;
+    if (minuteSelect) minuteSelect.value = minute;
+
+    // Update the date value
+    updateDateValue();
+}
+
+function updateQuickTimeButtons() {
+    const hourSelect = document.getElementById('calendar-hour');
+    const minuteSelect = document.getElementById('calendar-minute');
+
+    if (!hourSelect || !minuteSelect) return;
+
+    const currentHour = hourSelect.value;
+    const currentMinute = minuteSelect.value;
+
+    document.querySelectorAll('.quick-time-btn').forEach(btn => {
+        const btnHour = btn.dataset.hour;
+        const btnMinute = btn.dataset.minute;
+
+        if (btnHour === currentHour && btnMinute === currentMinute) {
+            btn.classList.add('selected');
+        } else {
+            btn.classList.remove('selected');
+        }
+    });
+}
+
+// ============================================
+// Calendar Preview
+// ============================================
+let displayedMonth = null; // Track which month is currently displayed
+let displayedYear = null;
+
+function showCalendarPreview() {
+    const preview = document.getElementById('calendar-preview');
+
+    // Use selected date or default to current month
+    const displayDate = selectedCalendarDate || new Date();
+    displayedMonth = displayDate.getMonth();
+    displayedYear = displayDate.getFullYear();
+
+    renderCalendarForDate(displayDate, selectedCalendarDate);
+    preview.classList.add('show');
+    updateQuickTimeButtons();
+}
+
+function hideCalendarPreview() {
+    const preview = document.getElementById('calendar-preview');
+    preview.classList.remove('show');
+}
+
+function updateCalendarPreview() {
+    const preview = document.getElementById('calendar-preview');
+
+    // Only update if preview is currently visible
+    if (!preview.classList.contains('show')) {
+        return;
+    }
+
+    const displayDate = selectedCalendarDate || new Date();
+    renderCalendarForDate(displayDate, selectedCalendarDate);
+}
+
+function selectCalendarDay(year, month, day) {
+    selectedCalendarDate = new Date(year, month, day);
+
+    // Preserve the current time selection
+    const hour = document.getElementById('calendar-hour')?.value || '17';
+    const minute = document.getElementById('calendar-minute')?.value || '00';
+    selectedCalendarDate.setHours(parseInt(hour), parseInt(minute), 0, 0);
+
+    updateDateValue();
+    updateCalendarPreview();
+}
+
+function renderCalendarForDate(displayDate, selectedDate) {
+    const preview = document.getElementById('calendar-preview');
+
+    // Update header
+    const monthYear = displayDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    const dayName = selectedDate
+        ? selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })
+        : 'Select a date';
+
+    preview.querySelector('.calendar-month-year').textContent = monthYear;
+    preview.querySelector('.calendar-day-name').textContent = dayName;
+
+    // Check if weekend and add warning class
+    if (selectedDate) {
+        const dayOfWeek = selectedDate.getDay();
+        if (dayOfWeek === 0 || dayOfWeek === 6) {
+            preview.classList.add('weekend-warning');
+        } else {
+            preview.classList.remove('weekend-warning');
+        }
+    } else {
+        preview.classList.remove('weekend-warning');
+    }
+
+    // Build calendar grid
+    renderCalendarDays(displayDate, selectedDate);
+}
+
+function renderCalendarDays(displayDate, selectedDate) {
+    const daysContainer = document.querySelector('.calendar-days');
+    daysContainer.innerHTML = '';
+
+    const year = displayDate.getFullYear();
+    const month = displayDate.getMonth();
+    const selectedDay = selectedDate ? selectedDate.getDate() : null;
+    const selectedMonth = selectedDate ? selectedDate.getMonth() : null;
+    const selectedYear = selectedDate ? selectedDate.getFullYear() : null;
+
+    const today = new Date();
+    const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+    const todayDate = today.getDate();
+
+    // First day of month and how many days
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDay = firstDay.getDay(); // 0 = Sunday
+
+    // Previous month days to show
+    const prevMonthLastDay = new Date(year, month, 0).getDate();
+
+    // Create calendar cells
+    // Previous month padding
+    for (let i = startingDay - 1; i >= 0; i--) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'calendar-day other-month';
+        dayEl.textContent = prevMonthLastDay - i;
+        daysContainer.appendChild(dayEl);
+    }
+
+    // Current month days
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'calendar-day';
+
+        // Check if weekend
+        const dayDate = new Date(year, month, day);
+        const dow = dayDate.getDay();
+        if (dow === 0 || dow === 6) {
+            dayEl.classList.add('weekend');
+        }
+
+        // Check if today
+        if (isCurrentMonth && day === todayDate) {
+            dayEl.classList.add('today');
+        }
+
+        // Check if selected (must match day, month, and year)
+        if (selectedDay && day === selectedDay && month === selectedMonth && year === selectedYear) {
+            dayEl.classList.add('selected');
+        }
+
+        dayEl.textContent = day;
+
+        // Make day clickable
+        const clickDay = day; // Capture for closure
+        dayEl.addEventListener('click', () => {
+            selectCalendarDay(year, month, clickDay);
+        });
+
+        daysContainer.appendChild(dayEl);
+    }
+
+    // Next month padding (fill to complete last row)
+    const totalCells = startingDay + daysInMonth;
+    const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+    for (let i = 1; i <= remainingCells; i++) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'calendar-day other-month';
+        dayEl.textContent = i;
+        daysContainer.appendChild(dayEl);
+    }
 }
 
 function formatDate(date) {
@@ -438,6 +669,12 @@ function saveCasesChanges() {
     });
 
     appData.matters = updatedMatters;
+
+    // Clean up recentCases and favoriteCases to remove deleted cases
+    const validCases = Object.keys(updatedMatters);
+    appData.recentCases = appData.recentCases.filter(c => validCases.includes(c));
+    appData.favoriteCases = appData.favoriteCases.filter(c => validCases.includes(c));
+
     saveAppData(appData);
     populateCaseNameDropdown();
     showSuccess('Cases saved successfully.');
@@ -564,24 +801,91 @@ function saveLocationsChanges() {
 // ============================================
 function populateCaseNameDropdown() {
     const appData = initializeAppData();
-    const matters = Object.keys(appData.matters);
+    const allMatters = Object.keys(appData.matters);
     const dropdown = document.getElementById('case-name-dropdown');
 
     dropdown.innerHTML = '';
 
-    if (matters.length === 0) {
+    if (allMatters.length === 0) {
         dropdown.innerHTML = '<div class="dropdown-empty">No saved cases</div>';
-    } else {
-        matters.forEach(matter => {
-            const item = document.createElement('div');
-            item.className = 'dropdown-item';
-            item.textContent = matter;
-            item.addEventListener('click', () => {
-                document.getElementById('case-name').value = matter;
-                loadMatterData(matter);
+        return;
+    }
+
+    // Get favorites and recent (that still exist in matters)
+    const favorites = appData.favoriteCases.filter(c => allMatters.includes(c));
+    const recent = appData.recentCases.filter(c => allMatters.includes(c) && !favorites.includes(c));
+    const remaining = allMatters.filter(c => !favorites.includes(c) && !recent.includes(c)).sort();
+
+    // Helper to create a case item
+    function createCaseItem(caseName, showStar = true) {
+        const item = document.createElement('div');
+        item.className = 'dropdown-item case-item';
+
+        const isFav = favorites.includes(caseName);
+
+        item.innerHTML = `
+            <span class="case-name-text">${caseName}</span>
+            ${showStar ? `<button type="button" class="star-btn ${isFav ? 'starred' : ''}" data-case="${caseName}" title="${isFav ? 'Remove from favorites' : 'Add to favorites'}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+            </button>` : ''}
+        `;
+
+        // Click on item selects the case
+        item.addEventListener('click', (e) => {
+            if (!e.target.closest('.star-btn')) {
+                document.getElementById('case-name').value = caseName;
+                loadMatterData(caseName);
                 dropdown.classList.remove('show');
+            }
+        });
+
+        // Star button toggles favorite
+        const starBtn = item.querySelector('.star-btn');
+        if (starBtn) {
+            starBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleFavoriteCase(caseName);
             });
-            dropdown.appendChild(item);
+        }
+
+        return item;
+    }
+
+    // Favorites section
+    if (favorites.length > 0) {
+        const header = document.createElement('div');
+        header.className = 'dropdown-item-header';
+        header.innerHTML = '<span class="section-icon">★</span> Favorites';
+        dropdown.appendChild(header);
+
+        favorites.forEach(caseName => {
+            dropdown.appendChild(createCaseItem(caseName));
+        });
+    }
+
+    // Recent section
+    if (recent.length > 0) {
+        const header = document.createElement('div');
+        header.className = 'dropdown-item-header';
+        header.innerHTML = '<span class="section-icon">🕐</span> Recent';
+        dropdown.appendChild(header);
+
+        recent.forEach(caseName => {
+            dropdown.appendChild(createCaseItem(caseName));
+        });
+    }
+
+    // All cases section (only if there are remaining cases)
+    if (remaining.length > 0) {
+        const header = document.createElement('div');
+        header.className = 'dropdown-item-header';
+        header.textContent = 'All Cases';
+        dropdown.appendChild(header);
+
+        remaining.forEach(caseName => {
+            dropdown.appendChild(createCaseItem(caseName));
         });
     }
 }
@@ -611,6 +915,11 @@ function populateDescriptionDropdown() {
                     loadDescriptionData(desc);
                     dropdown.classList.remove('show');
                     updateDescriptionHint();
+
+                    // Set default time from preset
+                    if (preset && preset.defaultTime) {
+                        setTimeFromPreset(preset.defaultTime.hour, preset.defaultTime.minute);
+                    }
                 });
                 dropdown.appendChild(item);
             });
@@ -693,7 +1002,54 @@ function saveMatterData(matterName, selectedAttorneys) {
         appData.matters[matterName] = { attorneys: [] };
     }
     appData.matters[matterName].attorneys = selectedAttorneys;
+
+    // Update recent cases
+    addToRecentCases(matterName);
+
     saveAppData(appData);
+}
+
+// ============================================
+// Recent & Favorite Cases Management
+// ============================================
+const MAX_RECENT_CASES = 5;
+
+function addToRecentCases(caseName) {
+    const appData = initializeAppData();
+
+    // Remove if already exists
+    appData.recentCases = appData.recentCases.filter(c => c !== caseName);
+
+    // Add to front
+    appData.recentCases.unshift(caseName);
+
+    // Keep only MAX_RECENT_CASES
+    if (appData.recentCases.length > MAX_RECENT_CASES) {
+        appData.recentCases = appData.recentCases.slice(0, MAX_RECENT_CASES);
+    }
+
+    saveAppData(appData);
+}
+
+function toggleFavoriteCase(caseName) {
+    const appData = initializeAppData();
+
+    const index = appData.favoriteCases.indexOf(caseName);
+    if (index > -1) {
+        // Remove from favorites
+        appData.favoriteCases.splice(index, 1);
+    } else {
+        // Add to favorites
+        appData.favoriteCases.push(caseName);
+    }
+
+    saveAppData(appData);
+    populateCaseNameDropdown();
+}
+
+function isFavoriteCase(caseName) {
+    const appData = initializeAppData();
+    return appData.favoriteCases.includes(caseName);
 }
 
 function saveDescriptionData(description, selectedReminders) {
@@ -862,6 +1218,30 @@ function downloadAllFiles() {
         setTimeout(triggerNextDownload, 500);
     }
     triggerNextDownload();
+}
+
+function createSimilarEvent() {
+    // Hide the download container
+    document.getElementById('download-container').style.display = 'none';
+    document.getElementById('status-message').className = 'status-message';
+
+    // Clear only the date - keep everything else
+    selectedCalendarDate = null;
+    document.getElementById('deadline-date').value = '';
+    document.getElementById('deadline-date-display').value = '';
+    document.getElementById('weekend-warning').classList.remove('show');
+
+    // Clear the description so user can enter a new one (but keep the case)
+    document.getElementById('deadline-description').value = '';
+    document.getElementById('description-hint').classList.remove('show');
+
+    // Scroll to top of form
+    document.querySelector('.main-container').scrollIntoView({ behavior: 'smooth' });
+
+    // Focus the description field
+    setTimeout(() => {
+        document.getElementById('deadline-description').focus();
+    }, 300);
 }
 
 // ============================================
@@ -1226,6 +1606,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Download all
     document.getElementById('download-all-button').addEventListener('click', downloadAllFiles);
 
+    // Create similar event
+    document.getElementById('create-similar-button').addEventListener('click', createSimilarEvent);
+
     // Dark mode
     document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
 
@@ -1268,6 +1651,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Description input to update hint visibility
     document.getElementById('deadline-description').addEventListener('input', updateDescriptionHint);
+
+    // Date field - show calendar on click
+    const dateDisplayInput = document.getElementById('deadline-date-display');
+    dateDisplayInput.addEventListener('click', showCalendarPreview);
+    dateDisplayInput.addEventListener('focus', showCalendarPreview);
+
+    // Time picker changes
+    document.getElementById('calendar-hour').addEventListener('change', () => {
+        updateDateValue();
+        updateQuickTimeButtons();
+    });
+    document.getElementById('calendar-minute').addEventListener('change', () => {
+        updateDateValue();
+        updateQuickTimeButtons();
+    });
+
+    // Quick time buttons
+    document.querySelectorAll('.quick-time-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const hour = btn.dataset.hour;
+            const minute = btn.dataset.minute;
+            setTimeFromPreset(hour, minute);
+            updateQuickTimeButtons();
+        });
+    });
+
+    // Hide calendar preview when clicking outside the date field area
+    document.addEventListener('click', (e) => {
+        const dateField = e.target.closest('.date-field');
+        if (!dateField) {
+            hideCalendarPreview();
+        }
+    });
 
     // Initial summary updates
     updateRecipientsSummary();
