@@ -108,6 +108,9 @@ const DEFAULT_ATTORNEYS = [
     { name: "Cade White", email: "cwhite@mcginnislaw.com" }
 ];
 
+// List of default preset texts that trigger the hint
+const PRESET_DEFAULT_TEXTS = ["Filing Deadline", "Hearing", "MSJ Hearing"];
+
 // ============================================
 // Data Management
 // ============================================
@@ -172,6 +175,17 @@ function updateRecipientsSummary() {
 function updateRemindersSummary() {
     const checked = document.querySelectorAll('.reminder-option:checked').length;
     document.getElementById('reminders-summary').textContent = `${checked} selected`;
+}
+
+function updateDescriptionHint() {
+    const descValue = document.getElementById('deadline-description').value.trim();
+    const hint = document.getElementById('description-hint');
+    // Show hint if the value exactly matches a preset default text
+    if (PRESET_DEFAULT_TEXTS.includes(descValue)) {
+        hint.classList.add('show');
+    } else {
+        hint.classList.remove('show');
+    }
 }
 
 // ============================================
@@ -596,6 +610,7 @@ function populateDescriptionDropdown() {
                     document.getElementById('deadline-description').value = defaultText;
                     loadDescriptionData(desc);
                     dropdown.classList.remove('show');
+                    updateDescriptionHint();
                 });
                 dropdown.appendChild(item);
             });
@@ -1250,6 +1265,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const descValue = this.value.trim();
         if (descValue) loadDescriptionData(descValue);
     });
+
+    // Description input to update hint visibility
+    document.getElementById('deadline-description').addEventListener('input', updateDescriptionHint);
 
     // Initial summary updates
     updateRecipientsSummary();
