@@ -20,14 +20,17 @@ const DEFAULT_CONFIG = {
 const DEFAULT_PRESET_DESCRIPTIONS = {
     "Standard Filing Deadline": {
         reminders: ["7AM Day Of", "1 Day", "3 Days", "1 Week", "1 Month"],
+        defaultText: "Filing Deadline",
         isPreset: true
     },
     "Standard Hearing Date": {
         reminders: ["7AM Day Of", "1 Day", "3 Days", "1 Week"],
+        defaultText: "Hearing",
         isPreset: true
     },
     "Standard MSJ Hearing": {
         reminders: ["7AM Day Of", "1 Day", "3 Days", "1 Week", "2 Weeks", "1 Month"],
+        defaultText: "MSJ Hearing",
         isPreset: true
     }
 };
@@ -587,7 +590,10 @@ function populateDescriptionDropdown() {
                 item.className = 'dropdown-item';
                 item.innerHTML = `${desc} <span class="preset-badge">Preset</span>`;
                 item.addEventListener('click', () => {
-                    document.getElementById('deadline-description').value = desc;
+                    // Use cleaner default text instead of full preset name
+                    const preset = appData.presetDescriptions[desc];
+                    const defaultText = preset && preset.defaultText ? preset.defaultText : desc;
+                    document.getElementById('deadline-description').value = defaultText;
                     loadDescriptionData(desc);
                     dropdown.classList.remove('show');
                 });
