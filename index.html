@@ -52,9 +52,9 @@
 
                 <!-- Description -->
                 <div class="form-field">
-                    <label for="deadline-description">Event Type</label>
+                    <label for="deadline-description">Deadline Description</label>
                     <div class="select-input">
-                        <input type="text" id="deadline-description" name="deadline-description" placeholder="Select or enter description" required>
+                        <input type="text" id="deadline-description" name="deadline-description" placeholder="e.g., Hearing - P's MSJ on Title Issues" required>
                         <button type="button" class="dropdown-trigger" data-dropdown="description-dropdown">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -304,7 +304,7 @@
                     <button type="button" class="tab-btn active" data-tab="organizer">Organizer</button>
                     <button type="button" class="tab-btn" data-tab="team">Team</button>
                     <button type="button" class="tab-btn" data-tab="cases">Cases</button>
-                    <button type="button" class="tab-btn" data-tab="descriptions">Descriptions</button>
+                    <button type="button" class="tab-btn" data-tab="descriptions">Presets</button>
                     <button type="button" class="tab-btn" data-tab="locations">Locations</button>
                     <button type="button" class="tab-btn" data-tab="data">Import/Export</button>
                 </div>
@@ -351,18 +351,18 @@
                     <button type="button" id="save-cases-button" class="save-btn">Save Cases</button>
                 </div>
 
-                <!-- Descriptions Tab -->
+                <!-- Presets Tab -->
                 <div id="tab-descriptions" class="tab-content">
-                    <p class="tab-description">Event types with default reminders</p>
+                    <p class="tab-description">Reminder presets for common event types. Select a preset from the dropdown to auto-fill reminders.</p>
                     <div id="description-items-container" class="items-list"></div>
                     <button type="button" id="add-description-button" class="add-btn">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
-                        Add Description
+                        Add Preset
                     </button>
-                    <button type="button" id="save-descriptions-button" class="save-btn">Save Descriptions</button>
+                    <button type="button" id="save-descriptions-button" class="save-btn">Save Presets</button>
                 </div>
 
                 <!-- Locations Tab -->
