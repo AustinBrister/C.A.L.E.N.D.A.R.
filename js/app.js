@@ -604,8 +604,8 @@ function populateDescriptionDropdown() {
                 item.className = 'dropdown-item';
                 item.innerHTML = `${desc} <span class="preset-badge">Preset</span>`;
                 item.addEventListener('click', () => {
-                    // Use cleaner default text instead of full preset name
-                    const preset = appData.presetDescriptions[desc];
+                    // Use cleaner default text from the constant (not localStorage)
+                    const preset = DEFAULT_PRESET_DESCRIPTIONS[desc];
                     const defaultText = preset && preset.defaultText ? preset.defaultText : desc;
                     document.getElementById('deadline-description').value = defaultText;
                     loadDescriptionData(desc);
